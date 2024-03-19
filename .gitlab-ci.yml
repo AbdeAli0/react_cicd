@@ -1,0 +1,30 @@
+stages:
+  - dependencies
+  - test
+  - deploy
+
+.cache: &cache
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - ./node_modules
+
+install_dependencies:
+  cache:
+    <<: *cache
+    policy: push
+  stage: dependencies
+  image: node
+  script:
+    - yarn install
+test:
+  cache:
+    <<: *cache
+    policy: pull
+  stage: test
+  image: node
+  script:
+    - yarn test
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to production"
